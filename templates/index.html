@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stock Chart</title>
+    <!-- Include Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="chart-container"></div>
+
+    <script>
+        // Function to generate random data for demonstration
+        function generateRandomData() {
+            var data = [];
+            for (var i = 0; i < 10; i++) {
+                data.push(Math.random() * 100); // Generate random data
+            }
+            return data;
+        }
+
+        // Function to render stock chart with live updating data
+        function renderLiveChart() {
+            // Create arrays to store x and y data
+            var xData = Array.from({ length: 10 }, (_, i) => i + 1); // Generate time values
+            var yData = Array.from({ length: 10 }, () => generateRandomData()); // Generate random stock prices
+
+            // Create traces for each company
+            var traces = [];
+            for (var i = 0; i < yData.length; i++) {
+                var trace = {
+                    x: xData,
+                    y: yData[i],
+                    mode: 'lines', // Add markers to show data points
+                    name: 'Company ' + (i + 1)
+                };
+                traces.push(trace);
+            }
+
+            // Define layout
+            var layout = {
+                title: 'Live Stock Prices Over Time',
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Stock Price' }
+            };
+
+            // Plot the chart
+            Plotly.newPlot('chart-container', traces, layout);
+        }
+
+        // Function to update the chart with new data every second
+        function updateChart() {
+            setInterval(function () {
+                // Generate new random data
+                var newData = Array.from({ length: 10 }, () => generateRandomData());
+
+                // Update the chart
+                Plotly.restyle('chart-container', 'y', [newData]);
+            }, 1000); // Update every second
+        }
+
+        // Call functions when the page is loaded
+        window.onload = function () {
+            renderLiveChart(); // Render initial chart
+            updateChart(); // Update the chart with new data
+        };
+    </script>
+</body>
+</html>
